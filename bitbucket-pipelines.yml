@@ -1,0 +1,96 @@
+options:
+  docker: true
+
+definitions:
+  caches:
+    bundler: vendor
+  steps:
+    - step: &update
+        name: Updating packages
+        caches:
+          - bundler
+          - composer
+        image: composer
+        script:
+          - unset COMPOSER_HOME
+          - composer install --ignore-platform-reqs --no-scripts
+        artifacts:
+          - vendor/**
+    - step: &psr12-check
+        name: PSR-12 check
+        image: arquivei/php:7.4-cli-alpine
+        script:
+          - ./vendor/bin/phpcs core --ignore=*/vendor/* --standard=PSR12 -p
+          - ./vendor/bin/phpcs app --ignore=*/vendor/* --standard=PSR12 -p
+    - step: &test
+        name: Tests
+        image: arquivei/php:7.4-fpm-alpine
+        script:
+          - ./vendor/bin/phpunit tests -c phpunit.xml
+    - step: &build
+        name: Docker Build
+        image: arquivei/pipeline
+        caches:
+          - docker
+        artifacts:
+          - image.docker
+        script:
+          - docker build -t ${BITBUCKET_REPO_SLUG} .
+          - docker save --output image.docker ${BITBUCKET_REPO_SLUG}
+    - step: &publish
+        name: Publish Image
+        image: arquivei/pipeline:2
+        script:
+          - |
+            case "$BITBUCKET_DEPLOYMENT_ENVIRONMENT" in
+              *production)
+                version=$(create-version)
+                publish -k "$GCLOUD_DEV_KEYFILE" -p "$GCLOUD_DEV_PROJECT" -i "${BITBUCKET_REPO_SLUG}" -t "latest" -t "$BITBUCKET_BUILD_NUMBER" -t "$version"
+                publish -k "$GCLOUD_PROD_KEYFILE" -p "$GCLOUD_PROD_PROJECT" -i "${BITBUCKET_REPO_SLUG}" -t "$BITBUCKET_BUILD_NUMBER" -t "$version"
+                ;;
+              *staging)
+                publish -k "$GCLOUD_DEV_KEYFILE" -p "$GCLOUD_DEV_PROJECT" -i "${BITBUCKET_REPO_SLUG}" -t "$BITBUCKET_BUILD_NUMBER" -t "${BITBUCKET_BRANCH//\//-}"
+                ;;
+              *test)
+                publish -k "$GCLOUD_DEV_KEYFILE" -p "$GCLOUD_DEV_PROJECT" -i "${BITBUCKET_REPO_SLUG}" -t "$BITBUCKET_BUILD_NUMBER"
+                ;;
+            esac
+    - step: &deploy
+        name: Deploy
+        trigger: manual
+        image: arquivei/pipeline:2
+        script:
+          - COMMIT_MESSAGE=`git log --format=%B -n 1 --no-merges $BITBUCKET_COMMIT | base64`
+          - VERSION=`git describe --tags --always`
+          - TEMPLATE_ID=${AWX_DEPLOY_ID_AUTOMATED}
+          - SERVICE_NAME=${BITBUCKET_REPO_SLUG}
+          - . tower.bash
+
+pipelines:
+  default:
+    - step: *update
+    - parallel:
+      - step: *psr12-check
+      - step: *test
+    - step: *build
+    - step:
+        <<: *publish
+        trigger: manual
+        deployment: test
+
+  branches:
+    master:
+      - step: *update
+      - step: *build
+      - step:
+          <<: *publish
+          deployment: production
+      - step: *deploy
+
+  custom:
+    dev:
+      - step: *update
+      - step: *build
+      - step:
+          <<: *publish
+          deployment: staging

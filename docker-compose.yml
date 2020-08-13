@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: ${APP_IDENTIFIER}-nginx
+    working_dir: /application
+    volumes:
+      - .:/application
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - ${APP_PORT}:80
+    links:
+      - php-fpm
+
+  php-fpm:
+    build: docker/php-fpm
+    image: ${APP_IDENTIFIER}_php-fpm
+    container_name: ${APP_IDENTIFIER}-php-fpm
+    working_dir: /application
+    volumes:
+      - .:/application
+    environment:
+      - APP_TIMEZONE=America/Sao_Paulo
+      - GOOGLE_APPLICATION_CREDENTIALS=/application/storage/gcp-credentials.json
+      - GOOGLE_CLOUD_PROJECT=arquiveidev
+
+  database:
+    restart: always
+    container_name: ${APP_IDENTIFIER}-database
+    image: postgres:12-alpine
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/app:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      TZ: America/Sao_Paulo
+
+networks:
+  default:
+    external:
+      name: docker-app-network

@@ -1,0 +1,80 @@
+{
+    "name": "arquivei/laravel-skeleton-api",
+    "type": "project",
+    "description": "The Laravel Skeleton API from Arquivei.",
+    "keywords": [
+        "framework",
+        "laravel",
+        "skeleton",
+        "bootstrap"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.4",
+        "arquivei/events-sender": "^3.3",
+        "arquivei/laravel-health-checker": "^2.0",
+        "fideloper/proxy": "^4.4",
+        "laravel/framework": "^7.0",
+        "laravel/tinker": "^2.4"
+    },
+    "require-dev": {
+        "facade/ignition": "^2.0",
+        "fzaninotto/faker": "^1.9",
+        "mockery/mockery": "^1.4",
+        "nunomaduro/collision": "^4.2",
+        "phpunit/phpunit": "^9.2",
+        "squizlabs/php_codesniffer": "^3.5",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12.8"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Core\\": "core/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.dist', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "phpstan": "./vendor/bin/phpstan analyse core app",
+        "phpcs": "./vendor/bin/phpcs core app --standard=PSR12 -p",
+        "phpcbf": "./vendor/bin/phpcbf core app --standard=PSR12 -p",
+        "phpunit": "./vendor/bin/phpunit tests/",
+        "coverage": "./vendor/bin/phpunit --whitelist tests/ --coverage-html storage/tests/coverage/",
+        "check": [
+            "@phpstan",
+            "@phpcs",
+            "@phpunit",
+            "@coverage"
+        ]
+    }
+}
