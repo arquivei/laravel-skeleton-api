@@ -26,6 +26,12 @@ Edit `.env.dist`
 
 ```shell script
 make setup
+
+sudo chmod -r 777 storage/
 ```
 
-## 
+## Access
+
+```shell script
+curl --header 'x-traceid: a5d112fe87eb473baee742f1328dfc9a' '127.0.0.1:5080/api/v1/test'
+```

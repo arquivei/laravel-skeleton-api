@@ -40,8 +40,3 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       TZ: America/Sao_Paulo
-
-networks:
-  default:
-    external:
-      name: docker-app-network

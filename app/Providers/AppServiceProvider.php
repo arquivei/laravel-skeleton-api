@@ -7,6 +7,7 @@ use App\Adapters\Monolog\MonologLogAdapter;
 use App\Adapters\Monolog\SettableTraceIdLogger;
 use App\Factories\KafkaFactory;
 use Arquivei\Events\Sender\Sender;
+use Arquivei\LogAdapter\Log;
 use Core\Dependencies\EventSenderInterface;
 use Core\Dependencies\LogInterface;
 use Illuminate\Support\ServiceProvider;
@@ -20,8 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(LogInterface::class, MonologLogAdapter::class);
-        $this->app->bind(SettableTraceIdLogger::class, LogInterface::class);
+        $this->app->singleton(LogInterface::class, Log::class);
 
         $this->app->bind(
             EventSenderInterface::class,

@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Adapters\EventSenderAdapter;
-use App\Factories\KafkaFactory;
-use Arquivei\Events\Sender\Sender;
-use Core\Dependencies\EventSenderInterface;
-use Core\Dependencies\LogInterface;
+use Arquivei\LogAdapter\Log;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -18,12 +14,10 @@ class BaseController extends Controller
     use DispatchesJobs;
     use ValidatesRequests;
 
-    protected LogInterface $logger;
-    protected EventSenderInterface $eventSender;
+    protected Log $logger;
 
-    public function __construct(LogInterface $logger, EventSenderInterface $eventSender)
+    public function __construct(Log $logger)
     {
         $this->logger = $logger;
-        $this->eventSender = $eventSender;
     }
 }
