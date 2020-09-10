@@ -23,7 +23,6 @@ class Kernel extends HttpKernel
     protected $middlewareGroups = [
         'api' => [
             \App\Http\Middleware\HeadersMiddleware::class,
-            \App\Http\Middleware\SetLoggerTraceId::class,
         ],
     ];
 

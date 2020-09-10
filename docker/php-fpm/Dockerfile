@@ -1,5 +1,7 @@
 FROM arquivei/php:7.4-fpm-alpine
 
+COPY php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
+
 WORKDIR /application
 
 RUN set -eux; \
@@ -8,7 +10,11 @@ RUN set -eux; \
     g++ \
     gcc \
     make \
-    zlib-dev; \
+    zlib-dev \
+    autoconf \
+    build-base \
+    git \
+    openssh; \
     pecl install xdebug; \
     echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini; \
     echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/xdebug.ini; \

@@ -4,17 +4,19 @@ Base project for Web APIs using Laravel
 
 ## Requirements
 
++ Composer
 + Git
 + docker-composer 1.26+
 
 ## Starting a New API
 
 ```shell script
-git clone git@github.com:arquivei/laravel-skeleton-api.git <NEW-API-NAME>
+composer create-project arquivei/laravel-skeleton-api my-awesome-api
+```
+Or
 
-cd <NEW-API-NAME>
-
-chmod -Rf 0777 "${PWD}/storage"
+```shell script
+docker run --rm -it -v $PWD:/app composer create-project arquivei/laravel-skeleton-api my-awesome-api
 ```
 
 Edit `.env.dist`
@@ -24,6 +26,12 @@ Edit `.env.dist`
 
 ```shell script
 make setup
+
+sudo chmod -r 777 storage/
 ```
 
-## 
+## Access
+
+```shell script
+curl --header 'x-traceid: a5d112fe87eb473baee742f1328dfc9a' '127.0.0.1:5080/api/v1/test'
+```

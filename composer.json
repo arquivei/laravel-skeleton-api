@@ -1,7 +1,7 @@
 {
     "name": "arquivei/laravel-skeleton-api",
     "type": "project",
-    "description": "The Laravel Skeleton API from Arquivei.",
+    "description": "The Arquivei Laravel Skeleton API.",
     "keywords": [
         "framework",
         "laravel",
@@ -12,6 +12,7 @@
     "require": {
         "php": "^7.4",
         "arquivei/events-sender": "^3.3",
+        "arquivei/log-adapter": "^0.0.1",
         "arquivei/laravel-health-checker": "^2.0",
         "fideloper/proxy": "^4.4",
         "laravel/framework": "^7.0",
