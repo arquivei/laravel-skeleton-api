@@ -2,6 +2,9 @@
 
 Base project for Web APIs using Laravel
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/arquivei/laravel-skeleton-api.svg?style=flat-square)](https://packagist.org/packages/arquivei/laravel-skeleton-api)
+[![Total Downloads](https://img.shields.io/packagist/dt/arquivei/laravel-skeleton-api.svg?style=flat-square)](https://packagist.org/packages/arquivei/laravel-skeleton-api)
+
 ## Requirements
 
 + Composer
