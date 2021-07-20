@@ -25,6 +25,7 @@ services:
       - APP_TIMEZONE=America/Sao_Paulo
       - GOOGLE_APPLICATION_CREDENTIALS=/application/storage/gcp-credentials.json
       - GOOGLE_CLOUD_PROJECT=arquiveidev
+      - PHP_IDE_CONFIG=serverName=laravel
 
   database:
     restart: always
