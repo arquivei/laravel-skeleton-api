@@ -1,4 +1,4 @@
-FROM arquivei/php:7.4-fpm-alpine
+FROM arquivei/php:8.1-fpm-alpine
 
 COPY php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
 

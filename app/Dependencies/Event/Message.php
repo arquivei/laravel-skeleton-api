@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Dependencies\Event;
 
 class Message
 {

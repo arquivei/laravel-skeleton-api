@@ -2,15 +2,17 @@
 
 namespace App\Exceptions;
 
-use App\Adapters\Monolog\MonologLogAdapter;
 use App\Http\Middleware\HeadersMiddleware;
-use Illuminate\Http\Response;
-use Throwable;
+use Arquivei\LogAdapter\Log;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -36,49 +38,49 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param Throwable $exception
-     * @throws \Exception
+     * @throws Throwable
      */
-    public function report(Throwable $exception)
+    public function report(Throwable $e)
     {
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Throwable $exception
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     * @param Request $request
      * @throws Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e): Response
     {
         if (App::environment('local')) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
 
-        if ($exception instanceof NotFoundHttpException) {
-            return $this->getResponse(Response::HTTP_NOT_FOUND);
+        if ($e instanceof NotFoundHttpException) {
+            return $this->getResponse(HttpResponse::HTTP_NOT_FOUND);
         }
 
-        if ($exception instanceof MethodNotAllowedHttpException) {
-            return $this->getResponse(Response::HTTP_METHOD_NOT_ALLOWED);
+        if ($e instanceof MethodNotAllowedHttpException) {
+            return $this->getResponse(HttpResponse::HTTP_METHOD_NOT_ALLOWED);
         }
 
-        if ($exception instanceof ValidationException) {
-            return $this->getResponse(Response::HTTP_UNPROCESSABLE_ENTITY);
+        if ($e instanceof ValidationException) {
+            return $this->getResponse(HttpResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        (new MonologLogAdapter($request->headers->get(HeadersMiddleware::X_TRACEID)))->error(
-            Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR],
-            ['exception' => $exception]
+        /** @var Log $logger */
+        $logger = app(Log::class);
+        $logger->setTraceId($request->headers->get(HeadersMiddleware::X_TRACEID));
+        $logger->error(
+            Response::$statusTexts[HttpResponse::HTTP_INTERNAL_SERVER_ERROR],
+            ['exception' => $e]
         );
 
-        return $this->getResponse(Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->getResponse(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    private function getResponse(int $httResponseCode)
+    private function getResponse(int $httResponseCode): Response
     {
         return response([
             'status' => [

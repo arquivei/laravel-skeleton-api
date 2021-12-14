@@ -9,7 +9,7 @@ COPY . /application
 
 RUN composer install $COMPOSER_ARGS
 
-FROM arquivei/php:7.4-fpm-alpine
+FROM arquivei/php:8.1-fpm-alpine
 
 WORKDIR /application
 

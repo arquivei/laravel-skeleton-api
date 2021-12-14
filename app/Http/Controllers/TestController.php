@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Adapters\TraceId\TraceIdGenerator;
 use Illuminate\Http\JsonResponse;
 
 class TestController extends BaseController

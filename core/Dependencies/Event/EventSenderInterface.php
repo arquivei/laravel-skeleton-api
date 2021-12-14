@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\Dependencies;
+namespace Core\Dependencies\Event;
 
-use App\Events\Message;
+use App\Dependencies\Event\Message;
 
 interface EventSenderInterface
 {
