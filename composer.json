@@ -10,23 +10,23 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.4",
-        "arquivei/events-sender": "^3.3",
-        "arquivei/log-adapter": "^0.0.1",
-        "arquivei/laravel-health-checker": "^2.0",
-        "fideloper/proxy": "^4.4",
-        "laravel/framework": "^7.0",
-        "laravel/tinker": "^2.4"
+        "php": "^8.1",
+        "arquivei/events-sender": "3.2.1",
+        "arquivei/log-adapter": "1.0.0",
+        "arquivei/laravel-health-checker": "2.2.0",
+        "fideloper/proxy": "4.4.1",
+        "laravel/framework": "8.75.0",
+        "laravel/tinker": "2.6.3"
     },
     "require-dev": {
-        "facade/ignition": "^2.0",
-        "fzaninotto/faker": "^1.9",
-        "mockery/mockery": "^1.4",
-        "nunomaduro/collision": "^4.2",
-        "phpunit/phpunit": "^9.2",
-        "squizlabs/php_codesniffer": "^3.5",
-        "phpstan/phpstan": "^0.12",
-        "phpstan/phpstan-phpunit": "^0.12.8"
+        "facade/ignition": "2.17.2",
+        "fakerphp/faker": "1.17.0",
+        "mockery/mockery": "1.4.4",
+        "nunomaduro/collision": "5.10.0",
+        "phpunit/phpunit": "9.5.10",
+        "squizlabs/php_codesniffer": "4.0.x-dev",
+        "phpstan/phpstan": "1.2.0",
+        "phpstan/phpstan-phpunit": "1.0.0"
     },
     "config": {
         "optimize-autoloader": true,
@@ -41,12 +41,10 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Core\\": "core/"
-        },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+            "Core\\": "core/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
     },
     "autoload-dev": {
         "psr-4": {

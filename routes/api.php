@@ -11,9 +11,8 @@
 |
 */
 
+use App\Http\Controllers\TestController;
+
 Route::group(['prefix' => 'v1', 'middleware' => []], function () {
-    /**
-     * api/v1/test
-     */
-    Route::get('/test', 'TestController@index')->name('test.index');
+    Route::get('/test', [TestController::class, 'index'])->name('test.index');
 });

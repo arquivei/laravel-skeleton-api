@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Events\Modules\Test;
+namespace App\Modules\Test;
 
-use App\Events\Message;
+use App\Dependencies\Event\Message;
 use Core\Modules\Test\Entities\Test;
 
 class TestEvent extends Message

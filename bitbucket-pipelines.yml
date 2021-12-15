@@ -18,13 +18,13 @@ definitions:
           - vendor/**
     - step: &psr12-check
         name: PSR-12 check
-        image: arquivei/php:7.4-cli-alpine
+        image: arquivei/php:8.1-cli-alpine
         script:
           - ./vendor/bin/phpcs core --ignore=*/vendor/* --standard=PSR12 -p
           - ./vendor/bin/phpcs app --ignore=*/vendor/* --standard=PSR12 -p
     - step: &test
         name: Tests
-        image: arquivei/php:7.4-fpm-alpine
+        image: arquivei/php:8.1-fpm-alpine
         script:
           - ./vendor/bin/phpunit tests -c phpunit.xml
     - step: &build
