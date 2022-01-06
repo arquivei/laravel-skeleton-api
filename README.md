@@ -30,7 +30,7 @@ Edit `.env.dist`
 ```shell script
 make setup
 
-sudo chmod -r 777 storage/
+sudo chmod -R 777 storage/
 ```
 
 ## Access
